@@ -156,7 +156,7 @@ def improovy_reminder():
         
         else:
             #delete if and deindent after tsting
-            #send_text(us_num, them_num, response, improovy_api_key, improovy_api_secret)
+            send_text(us_num, them_num, response, improovy_api_key, improovy_api_secret)
             counter += 1
             print(response)
             rd.hset("last_message-" + us_num, them_num, '0-' + now)
