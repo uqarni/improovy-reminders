@@ -6,11 +6,6 @@ import json
 import requests
 from datetime import datetime, timedelta
 import requests
-from langchain.llms import OpenAI
-from langchain.agents import initialize_agent
-from langchain.agents.agent_toolkits import ZapierToolkit
-from langchain.agents import AgentType
-from langchain.utilities.zapier import ZapierNLAWrapper
 import json
 import openai
 from justcall import send_text
