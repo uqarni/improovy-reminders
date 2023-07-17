@@ -22,4 +22,5 @@ else:
 rd = redis.Redis(host=redis_host, port=redis_port, password=redis_password, ssl=True, ssl_ca_certs=ssl_ca_certs)
 
 
-improovy_reminder()
+# improovy_reminder()
+

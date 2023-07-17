@@ -8,10 +8,11 @@ from datetime import datetime, timedelta
 import requests
 import json
 import openai
-from justcall import send_text
+from justcall import send_text, assign_to_group
 import time
 import logging
 import platform
+import hashlib
 
 #improovy justcall info
 improovy_api_key = "a475b0ecf1d1ba78ec7a9bc49d60f225531f3617"
@@ -92,12 +93,12 @@ def improovy_reminder():
 
     #exit_code
     exit_code = "DO NOT SEND THIS YO"
+    # Filtering filtered_data to include only numbers that belong to group 'a'
+    filtered_data = [number for number in filtered_data if assign_to_group(str(number[0])) != 0]
 
     for number in filtered_data:
         print(number)
         them_num = str(number[0])
-
-
         #create messages
         #remember, message chain key format is 14067294654-+17372740771
         key = us_num + "-" + them_num
