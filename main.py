@@ -94,7 +94,7 @@ def improovy_reminder():
     #exit_code
     exit_code = "DO NOT SEND THIS YO"
     # Filtering filtered_data to include only numbers that belong to group 'a'
-    filtered_data = [number for number in filtered_data if assign_to_group(str(number[0])) != 0]
+    #filtered_data = [number for number in filtered_data if assign_to_group(str(number[0])) != 0]
 
     for number in filtered_data:
         print(number)
