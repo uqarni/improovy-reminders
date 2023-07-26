@@ -89,7 +89,7 @@ def improovy_reminder():
     print("secret_message is " + secret_message)
     injected_message_dict = {"role": "user", "content": secret_message}
     injected_message = json.dumps(injected_message_dict)
-
+ 
 
     #exit_code
     exit_code = "DO NOT SEND THIS YO"
@@ -97,6 +97,8 @@ def improovy_reminder():
     #filtered_data = [number for number in filtered_data if assign_to_group(str(number[0])) != 0]
 
     for number in filtered_data:
+        if number == '+17372740771' or number == '+17732323561':
+            continue
         print(number)
         them_num = str(number[0])
         #create messages
@@ -131,7 +133,7 @@ def improovy_reminder():
             final_error_message = f"Failed all {i + 1} attempts to call the API."
             print(error_message)
             send_text(us_num, "+17372740771", final_error_message + "-From: " + us_num + ".\nTo: " + them_num, improovy_api_key, improovy_api_secret)
-            return {"status": "failed"}
+            continue
     
         #response = openai.ChatCompletion.create(model = "gpt-4", messages = messages, max_tokens = 600)
         response = response["choices"][0]["message"]["content"] 
