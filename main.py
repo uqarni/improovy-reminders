@@ -90,6 +90,8 @@ def improovy_reminder():
     injected_message_dict = {"role": "user", "content": secret_message}
     injected_message = json.dumps(injected_message_dict)
  
+    #hack to solve duplicate
+    already_sent = []
 
     #exit_code
     exit_code = "DO NOT SEND THIS YO"
@@ -122,11 +124,11 @@ def improovy_reminder():
         for i in range(5):
             try:
                 response = openai.ChatCompletion.create(model = "gpt-4", messages = messages, max_tokens = 600)
+                response = response["choices"][0]["message"]["content"] 
                 break
             except Exception as e:
                 error_message = f"Attempt {i + 1} failed: {e}"
                 print(error_message)
-                send_text(us_num, "+17372740771", error_message + "-From: " + us_num + ".\nTo: " + them_num, improovy_api_key, improovy_api_secret)
                 if i < 4:
                     time.sleep(5)
         else:
@@ -136,7 +138,7 @@ def improovy_reminder():
             continue
     
         #response = openai.ChatCompletion.create(model = "gpt-4", messages = messages, max_tokens = 600)
-        response = response["choices"][0]["message"]["content"] 
+        
 
         now = datetime.now()
         now = now.strftime("%Y-%m-%d %H:%M:%S")
@@ -154,7 +156,10 @@ def improovy_reminder():
         
         else:
             #delete if and deindent after tsting
+            if them_num in already_sent:
+                continue
             send_text(us_num, them_num, response, improovy_api_key, improovy_api_secret)
+            already_sent.append(them_num)
             counter += 1
             print(response)
             rd.hset("last_message-" + us_num, them_num, '0-' + now)
