@@ -159,6 +159,8 @@ def improovy_reminder():
             if them_num in already_sent:
                 continue
             send_text(us_num, them_num, response, improovy_api_key, improovy_api_secret)
+            send_text(us_num, "+17736206534", 'Improovy Follow Up To: ' + them_num + '\nFrom :' + us_num + '\nMessage: ' + response, improovy_api_key, improovy_api_secret)
+
             already_sent.append(them_num)
             counter += 1
             print(response)
