@@ -124,6 +124,7 @@ def improovy_reminder():
         for i in range(5):
             try:
                 response = openai.ChatCompletion.create(model = "gpt-4", messages = messages, max_tokens = 600)
+                rd.hset('improovy_usage', now, str(response['usage']))
                 response = response["choices"][0]["message"]["content"] 
                 break
             except Exception as e:
