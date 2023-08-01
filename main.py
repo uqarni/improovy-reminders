@@ -99,8 +99,9 @@ def improovy_reminder():
     #filtered_data = [number for number in filtered_data if assign_to_group(str(number[0])) != 0]
 
     for number in filtered_data:
-        if number == '+17372740771' or number == '+17732323561':
+        if number == '+17372740771' or number == '+17736206534':
             continue
+        time.sleep(5)
         print(number)
         them_num = str(number[0])
         #create messages
