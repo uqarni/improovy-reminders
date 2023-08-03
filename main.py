@@ -35,6 +35,16 @@ else:
 
 rd = redis.Redis(host=redis_host, port=redis_port, password=redis_password, ssl=True, ssl_ca_certs=ssl_ca_certs)
 
+def add_space_after_url(s):
+    words = s.split()
+    for i, word in enumerate(words):
+        if word.startswith('http://') or word.startswith('https://'):
+            if word[-1] in '.,!?;:':
+                words[i] = word[:-1] + ' ' + word[-1] + ' '
+            else:
+                words[i] = word + ' '
+    return ' '.join(words)
+
 def improovy_reminder():
     logging.basicConfig(level=logging.INFO)
     logging.info("Running my function...")
@@ -127,6 +137,7 @@ def improovy_reminder():
                 response = openai.ChatCompletion.create(model = "gpt-4", messages = messages, max_tokens = 600)
                 rd.hset('improovy_usage', str(now), str(response['usage']))
                 response = response["choices"][0]["message"]["content"] 
+                response = add_space_after_url(response)
                 break
             except Exception as e:
                 error_message = f"Attempt {i + 1} failed: {e}"
