@@ -127,7 +127,70 @@ def improovy_reminder():
 
         #find and prepend system prompt
         email = rd.get(us_num + "-owner").decode('utf-8')
-        system_prompt = {"role": "system", "content": rd.get(email+"-systemprompt-01").decode('utf-8')}
+        system_prompt = rd.get(email + "-systemprompt-01").decode('utf-8')
+
+        # get all the info from the db
+        try:
+            hash_data = rd.hgetall('improovy_lead-' + them_num)
+            data_dict = {}
+            for subkey, value in hash_data.items():
+                value_str = value.decode()
+                if not value_str:
+                    value_str = 'unknown'
+                data_dict[subkey.decode()] = value_str
+
+            # find and prepend system prompt
+            user_email = 'carr@improovy.com'
+            system_prompt = rd.get(user_email + "-systemprompt-01").decode('utf-8')
+
+            # replace with dynamic booking link
+            booking_link = 'https://calendly.com/d/y7c-t9v-tnj/15-minute-meeting-with-improovy-painting-expert '
+
+            # replace with name variable
+            name = "Mike"
+
+            interior_surfaces = str(data_dict.get('interior_surfaces')) if data_dict.get('interior_surfaces') else 'unknown'
+            interior_wall_height = str(data_dict.get('interior_wall_height')) if data_dict.get('interior_wall_height') else 'unknown'
+            exterior_surfaces = str(data_dict.get('exterior_surfaces')) if data_dict.get('exterior_surfaces') else 'unknown'
+            exterior_wall_height = str(data_dict.get('exterior_wall_height')) if data_dict.get('exterior_wall_height') else 'unknown'
+
+
+            system_prompt = system_prompt.format(
+                #hardcoded
+                name=name,
+                booking_link=booking_link,
+                #from contact
+                personid=data_dict.get('personid', 'unknown'),
+                email=data_dict.get('email', 'unknown'),
+                owner=data_dict.get('owner', 'unknown'),
+                #from deal
+                project_title=data_dict.get('project_title', 'unknown'),
+                status=data_dict.get('status', 'unknown'),
+                stage=data_dict.get('stage', 'unknown'),
+                lead_full_name=data_dict.get('lead_full_name', 'unknown'),
+                address=data_dict.get('address', 'unknown'),
+                timeline=data_dict.get('timeline', 'unknown'),
+                spreadsheet=data_dict.get('spreadsheet', 'unknown'),
+                zipcode=data_dict.get('zipcode', 'unknown'),
+                initial_description=data_dict.get('initial_description', 'unknown'),
+                additional_notes=data_dict.get('additional_notes', 'unknown'),
+                sqft = data_dict.get('square_footage', 'unknown'),
+                color = data_dict.get('desired_color', 'unknown'),
+                interior_surfaces = interior_surfaces,
+                interior_wall_height = interior_wall_height,
+                exterior_surfaces = exterior_surfaces,
+                exterior_wall_height = exterior_wall_height,
+                #from booking
+                resched_link=data_dict.get('resched_link', 'unknown'),
+                cancel_link=data_dict.get('resched_link', 'unknown'),
+                meeting_booked=data_dict.get('meeting_booked', 'unknown'),
+                meeting_time=data_dict.get('meeting_time', 'unknown')
+            )
+        except Exception as e:
+            print(e)
+            send_text(us_num, "+17372740771", "Improovy Follow Up To: " + them_num + "\nFrom: " + us_num + "\nMessage: " + "Error in system prompt", improovy_api_key, improovy_api_secret)
+        
+        system_prompt = {"role": "system", "content": system_prompt}
 
         messages.insert(0,system_prompt)
 
