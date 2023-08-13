@@ -125,10 +125,6 @@ def improovy_reminder():
         #append secret message to messages
         messages.append(json.loads(injected_message))
 
-        #find and prepend system prompt
-        email = rd.get(us_num + "-owner").decode('utf-8')
-        system_prompt = rd.get(email + "-systemprompt-01").decode('utf-8')
-
         # get all the info from the db
         try:
             hash_data = rd.hgetall('improovy_lead-' + them_num)
@@ -254,7 +250,7 @@ if __name__ == "__main__":
     # Schedule the function to run daily at the time of your choosing (e.g., 5:30 PM)
     hour = rd.get("13128472321-reminder_hour").decode('utf-8')
     hour = int(hour)
-    scheduler.add_job(improovy_reminder, 'cron', hour=hour, minute=0)
+    scheduler.add_job(improovy_reminder, 'cron', hour=20, minute=30)
     logging.basicConfig(level=logging.INFO)
     logging.info("Starting the scheduler...")
     scheduler.start()
