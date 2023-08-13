@@ -250,8 +250,8 @@ if __name__ == "__main__":
     # Schedule the function to run daily at the time of your choosing (e.g., 5:30 PM)
     hour = rd.get("13128472321-reminder_hour").decode('utf-8')
     hour = int(hour)
-    minute = 46
-    scheduler.add_job(improovy_reminder, 'cron', hour=0, minute=minute)
+    minute = 50
+    scheduler.add_job(improovy_reminder, 'cron', hour=1, minute=minute)
     logging.basicConfig(level=logging.INFO)
     logging.info(f"Starting the scheduler. will run at {hour}:{minute}")
     scheduler.start()
