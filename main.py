@@ -111,6 +111,17 @@ def improovy_reminder():
     for number in filtered_data:
         if number == '+17372740771' or number == '+17736206534':
             continue
+
+        #followups
+        followups = rd.hget('improovy_followup_count', them_num).decode('utf-8')
+        if not followups:
+            rd.hset('improovy_followup_count', them_num,"0")
+            followups = '0'
+        if int(followups) >= int(recurrence):
+            continue
+        rd.hset('improovy_followup_count', them_num, str(int(followups) + 1))
+        #end followups
+
         time.sleep(10)
         print(number)
         them_num = str(number[0])
