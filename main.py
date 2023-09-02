@@ -89,7 +89,7 @@ def improovy_reminder():
     #tara number
     # ("14067294654-followup_count", "3")
     # ("14067294654-secret_message")
-    us_num = "+13128472321"
+    us_num = "+16084205020"
     #pull recurrence value
     recurrence = rd.get("13128472321-followup_count").decode('utf-8')
     #message those that are remaining 
@@ -103,8 +103,6 @@ def improovy_reminder():
     #hack to solve duplicate
     already_sent = []
 
-    #exit_code
-    exit_code = "DO NOT SEND THIS YO"
     # Filtering filtered_data to include only numbers that belong to group 'a'
     #filtered_data = [number for number in filtered_data if assign_to_group(str(number[0])) != 0]
 
