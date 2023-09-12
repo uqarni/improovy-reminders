@@ -260,7 +260,7 @@ if __name__ == "__main__":
     hour = rd.get("13128472321-reminder_hour").decode('utf-8')
     hour = int(hour)
     minute = 0
-    scheduler.add_job(improovy_reminder, 'cron', hour=hour, minute=minute)
+    scheduler.add_job(improovy_reminder, 'cron', hour=17, minute=12)
     logging.basicConfig(level=logging.INFO)
     logging.info(f"Starting the scheduler. will run at {hour}:{minute}")
     scheduler.start()
