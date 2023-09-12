@@ -107,7 +107,8 @@ def improovy_reminder():
     #filtered_data = [number for number in filtered_data if assign_to_group(str(number[0])) != 0]
 
     for number in filtered_data:
-        if number == '+17372740771' or number == '+17736206534':
+        them_num = str(number[0])
+        if them_num == '+17372740771' or them_num == '+17736206534':
             continue
 
         #followups
@@ -122,7 +123,8 @@ def improovy_reminder():
 
         time.sleep(10)
         print(number)
-        them_num = str(number[0])
+        
+        
         #create messages
         #remember, message chain key format is 14067294654-+17372740771
         key = us_num + "-" + them_num
@@ -260,7 +262,7 @@ if __name__ == "__main__":
     hour = rd.get("13128472321-reminder_hour").decode('utf-8')
     hour = int(hour)
     minute = 0
-    scheduler.add_job(improovy_reminder, 'cron', hour=17, minute=12)
+    scheduler.add_job(improovy_reminder, 'cron', hour=17, minute=50)
     logging.basicConfig(level=logging.INFO)
     logging.info(f"Starting the scheduler. will run at {hour}:{minute}")
     scheduler.start()
