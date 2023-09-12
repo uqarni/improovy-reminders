@@ -57,9 +57,9 @@ def improovy_reminder():
 
     #extract all conversation statuses
     allconvos_status = []
-    for number in rd.hgetall("last_message-+13128472321"):
+    for number in rd.hgetall("last_message-+16084205020"):
         number = number.decode('utf-8')
-        status = rd.hget("last_message-+13128472321", number).decode('utf-8')
+        status = rd.hget("last_message-+16084205020", number).decode('utf-8')
         allconvos_status.append((number,status))
 
             # status of the form +18326470488: 0-2023-05-01 06:05:40
