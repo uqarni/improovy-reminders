@@ -258,14 +258,14 @@ def improovy_reminder():
     print(counter)
     return {"status": "success", "counter": counter}
 
-# if __name__ == "__main__":
-#     scheduler = BlockingScheduler()
-#     scheduler.add_job(improovy_reminder, 'interval', minutes=5)
-#     logging.basicConfig(level=logging.INFO)
-#     logging.info("Starting the scheduler. Will run every 5 minutes.")
-#     scheduler.start()
+if __name__ == "__main__":
+    scheduler = BlockingScheduler()
+    scheduler.add_job(improovy_reminder, 'interval', minutes=5)
+    logging.basicConfig(level=logging.INFO)
+    logging.info("Starting the scheduler. Will run every 5 minutes.")
+    scheduler.start()
 
-improovy_reminder()
+
 
 
 
