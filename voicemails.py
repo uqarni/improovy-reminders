@@ -75,10 +75,7 @@ def add_voicemails():
     voicemail_body = query_calls(improovy_api_key, improovy_api_secret, 10)
 
     voicemails = voicemail_body['data']
-    voicemails = [
-        # your list of dictionaries here
-    ]
-
+    print('number of voicemails retrieved: ' + str(len(voicemails)))
     current_time = datetime.utcnow()
     time_limit = current_time - timedelta(minutes = 10)
 
@@ -96,6 +93,7 @@ def add_voicemails():
 
 
     count = 1
+    print('number of voicemails in the last 10 minutes: ' + str(len(filtered_voicemails)))
     for voicemail in filtered_voicemails:
         print('pulling voicemail ' + str(count))
         print('voicemail ' + str(count) + ' pulled')
