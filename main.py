@@ -13,7 +13,7 @@ import time
 import logging
 import platform
 import hashlib
-
+from voicemails import add_voicemails
 #improovy justcall info
 improovy_api_key = "a475b0ecf1d1ba78ec7a9bc49d60f225531f3617"
 improovy_api_secret = "bed00ba3e48de573ab7841e11971c32948edff6f"
@@ -46,6 +46,8 @@ def add_space_after_url(s):
     return ' '.join(words)
 
 def improovy_reminder():
+    add_voicemails()
+    return 200
     logging.basicConfig(level=logging.INFO)
     logging.info("Running my function...")
     #counter to return
@@ -60,7 +62,7 @@ def improovy_reminder():
     for number in rd.hgetall("last_message-+16084205020"):
         number = number.decode('utf-8')
         status = rd.hget("last_message-+16084205020", number).decode('utf-8')
-        allconvos_status.append((number,status))
+        allconvos_status.append((number, status))
 
             # status of the form +18326470488: 0-2023-05-01 06:05:40
     for numbstat in allconvos_status:
@@ -258,14 +260,11 @@ def improovy_reminder():
 
 if __name__ == "__main__":
     scheduler = BlockingScheduler()
-    # Schedule the function to run daily at the time of your choosing (e.g., 5:30 PM)
-    hour = rd.get("13128472321-reminder_hour").decode('utf-8')
-    hour = int(hour)
-    minute = 0
-    scheduler.add_job(improovy_reminder, 'cron', hour=17, minute=50)
+    scheduler.add_job(improovy_reminder, 'interval', minutes=5)
     logging.basicConfig(level=logging.INFO)
-    logging.info(f"Starting the scheduler. will run at {hour}:{minute}")
+    logging.info("Starting the scheduler. Will run every 5 minutes.")
     scheduler.start()
+
 
 
 
