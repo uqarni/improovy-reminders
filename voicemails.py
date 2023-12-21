@@ -129,6 +129,18 @@ def add_voicemails():
             print(dealid)
             add_note = crm.add_note(content = 'VOICEMAIL: ' + transcript['text'], dealid = dealid)
             print('added note ' + str(add_note))
+        
+        #summarize voicemail using bot
+        # TODO: vm_summary = summarize_voicemail(transcript['text'])
+
+        #update contact in supabase to be part of the voicemail campaign
+        # TODO: modify_campaign(contactid, 'improovy_voicemail')
+
+        #send initial message using bot
+        # TODO: initial_text = construct_initial_message(contactid, vm_summary)
+
+        # TODO: jc.send_text(voicemail['contact_number'], initial_text)
+        
 
 
 
