@@ -147,6 +147,18 @@ def add_voicemails():
 
             db_contact = db.fetch_by_contact_phone_and_orgid('contacts', contact_number, 'improovy')
 
+            if db_contact == []:
+                #create contact in supabase
+                print('creating contact in supabase')
+                new_contact = {
+                    'org_id': 'improovy',
+                    'last_contact': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    'contact_phone': contact_number,
+                    'custom_data': '\{\}'
+                }
+                db.insert('contacts', new_contact)
+                db_contact = db.fetch_by_contact_phone_and_orgid('contacts', contact_number, 'improovy')
+
             if db_contact.get('group','N/A') == 'voicemail':
                 print('already sent a voicemail to this person')
                 return 200
@@ -163,7 +175,7 @@ def add_voicemails():
             ## generate summary
             initial_message, prompt_tokens, completion_tokens = generate_response(summarizer_prompt)
             print('initial message: ', initial_message, ' to contact: ', contact_number)
-            
+
             #parse initial message for snippet
             project_description_pattern = r"voicemail about (.+?)\. Can"
             initial_text_list = [initial_message]
