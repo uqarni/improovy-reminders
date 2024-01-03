@@ -1,11 +1,15 @@
 # import redis
 # import os
 # import platform
-import openai 
+import openai
+from openai_client import generate_response
 import time
 from pipedrive import PipedriveClient
 from justcall import send_text
 from datetime import datetime, timedelta
+from supabase_client import SupabaseClient
+import os
+import re
 
 #improovy justcall info
 improovy_api_key = "a475b0ecf1d1ba78ec7a9bc49d60f225531f3617"
@@ -104,6 +108,8 @@ def add_voicemails():
 
         audio_file= open('downloaded_file' + str(count) + '.mp3', "rb")
         print('generating transcript for voicemail ' + str(count))
+        print('voicemail raw contents: ', str(voicemail))
+
         try:
             transcript = openai.Audio.transcribe("whisper-1", audio_file)
         except:
@@ -120,26 +126,61 @@ def add_voicemails():
             print(contactid)
             deals = crm.deals_from_personID(contactid)
             dealids = []
-            for deal in deals['data']:
+            for deal in deals.get('data', []):
                 dealids.append(deal['id'])
             add_note = crm.add_note(content = 'VOICEMAIL: ' + transcript['text'], personid = contactid)
             print('added note' + str(add_note))
+
         for dealid in dealids:
             print('dealid')
             print(dealid)
             add_note = crm.add_note(content = 'VOICEMAIL: ' + transcript['text'], dealid = dealid)
             print('added note ' + str(add_note))
+
+        try:
+            #VOICEMAIL RESPONDER STARTS HERE
+            #check to see if weve already sent a voicemail to this person
+            contact_number = voicemail['contact_number']
+            print('contact_number: ', contact_number)
+            
+            db = SupabaseClient()
+
+            db_contact = db.fetch_by_contact_phone_and_orgid('contacts', contact_number, 'improovy')
+
+            if db_contact.get('group','N/A') == 'voicemail':
+                print('already sent a voicemail to this person')
+                return 200
+            else:
+                id = db_contact.get('id')
+                db.update_contact(id, {'group': 'voicemail'})
+                print('updated contact group to voicemail')
+                
+            summarizer_prompt = db.get_system_prompt_prod("bots", "mike_voicemail_summarizer")
+
+            summarizer_prompt = summarizer_prompt.format(voicemail = transcript['text'], name="Mike")
+            summarizer_prompt = [{"role": "system", "content": summarizer_prompt}]
+
+            ## generate summary
+            initial_message, prompt_tokens, completion_tokens = generate_response(summarizer_prompt)
+            print('initial message: ', initial_message, ' to contact: ', contact_number)
+            
+            #parse initial message for snippet
+            project_description_pattern = r"voicemail about (.+?)\. Can"
+            initial_text_list = [initial_message]
+            project_description = [re.search(project_description_pattern, initial_message).group(1) for i in initial_text_list]
+
+            #store project description in custom data
+            custom_data = db_contact.get('custom_data')
+            custom_data['project_description'] = project_description
+            db.update_contact(id, {'custom_data': custom_data})
+
+            #send initial message using bot
+        except Exception as e:
+            print('error: ', e)
+            return 200
+
         
-        #summarize voicemail using bot
-        # TODO: vm_summary = summarize_voicemail(transcript['text'])
 
-        #update contact in supabase to be part of the voicemail campaign
-        # TODO: modify_campaign(contactid, 'improovy_voicemail')
-
-        #send initial message using bot
-        # TODO: initial_text = construct_initial_message(contactid, vm_summary)
-
-        # TODO: jc.send_text(voicemail['contact_number'], initial_text)
         
 
 
