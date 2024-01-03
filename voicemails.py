@@ -184,6 +184,7 @@ def add_voicemails():
             #store project description in custom data
             custom_data = db_contact.get('custom_data')
             custom_data['project_description'] = project_description
+            custom_data['voicemail'] = transcript['text']
             db.update_contact(id, {'custom_data': custom_data})
 
             #send initial message using bot
