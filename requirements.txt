@@ -2,3 +2,4 @@ redis
 openai
 APScheduler
 requests
+supabase
