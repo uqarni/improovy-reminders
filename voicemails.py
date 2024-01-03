@@ -140,7 +140,7 @@ def add_voicemails():
         try:
             #VOICEMAIL RESPONDER STARTS HERE
             #check to see if weve already sent a voicemail to this person
-            contact_number = voicemail['contact_number']
+            contact_number = '+' + voicemail['contact_number']
             print('contact_number: ', contact_number)
             
             db = SupabaseClient()
