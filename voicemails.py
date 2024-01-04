@@ -147,7 +147,8 @@ def add_voicemails():
 
             db_contact = db.fetch_by_contact_phone_and_orgid('contacts', contact_number, 'improovy')
             print('db_contact: ', db_contact)
-            if db_contact == []:
+
+            if db_contact == None:
                 #create contact in supabase
                 print('creating contact in supabase')
                 new_contact = {
