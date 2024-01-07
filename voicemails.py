@@ -165,7 +165,7 @@ def add_voicemails():
                 return 200
             else:
                 id = db_contact.get('id')
-                db.update_contact(id, {'group': 'voicemail'})
+                db.update('contacts', {'group': 'voicemail'}, id)
                 print('updated contact group to voicemail')
                 
             summarizer_prompt = db.get_system_prompt_prod("bots", "mike_voicemail_summarizer")
