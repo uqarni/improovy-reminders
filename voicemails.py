@@ -159,7 +159,7 @@ def add_voicemails():
                     'org_id': 'improovy',
                     'last_contact': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     'contact_phone': contact_number,
-                    'custom_data': '\{\}'
+                    'custom_data': '{}'
                 }
                 db.insert('contacts', new_contact)
                 db_contact = db.fetch_by_contact_phone_and_orgid('contacts', contact_number, 'improovy')
@@ -191,7 +191,7 @@ def add_voicemails():
             custom_data = json.loads(custom_data)
             custom_data['project_description'] = project_description
             custom_data['voicemail'] = transcript['text']
-            db.update_contact(id, {'custom_data': custom_data})
+            db.update_contact(id, {'custom_data': json.dumps(custom_data)})
 
             #send initial message using bot
         except Exception as e:
