@@ -5,7 +5,7 @@ import openai
 from openai_client import generate_response
 import time
 from pipedrive import PipedriveClient
-from justcall import send_text
+from justcall import JustCallClient
 from datetime import datetime, timedelta
 from supabase_client import SupabaseClient
 import os
@@ -194,6 +194,10 @@ def add_voicemails():
             db.update_contact(id, {'custom_data': json.dumps(custom_data)})
 
             #send initial message using bot
+            jc = JustCallClient
+            jc.send_text(contact_number, initial_message)
+            jc.send_text("+17372740771", initial_message + ' to ' + contact_number)
+            
         except Exception as e:
             print('error: ', e)
             return 200

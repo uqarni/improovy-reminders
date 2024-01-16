@@ -1,35 +1,27 @@
 import requests
-import hashlib
-
-def send_text(us_num, them_num, us_message, api_key, api_secret):
-##SEND TEXT
-    headers = {
-        'Accept': 'application/json',
-        'Authorization': f'{api_key}:{api_secret}',
-    }
-    data = {
-        'from': us_num,
-        'to': them_num,
-        'body': us_message
-    }
-    url = 'https://api.justcall.io/v1/texts/new'
-
-    response = requests.post(url, headers=headers, json=data)
-    response = response.json()
-    print('sendtext')
-    print(response)
-    return {"status": "success"}
 
 
-def assign_to_group(contact_number):
-    if '7372740771' in contact_number:
-        return 1
-    """Assigns the contact to A or B group based on their phone number"""
-    # Create a new md5 hash object
-    hasher = hashlib.md5()
-    # Hash the phone number
-    hasher.update(contact_number.encode())
-    # Get the hexadecimal representation of the hash
-    hash_string = hasher.hexdigest()
-    # Convert the hash to an integer and return 0 for B group, 1 for A group
-    return int(hash_string, 16) % 2
+class JustCallClient:
+    def __init__(self):
+        self.api_key = "a475b0ecf1d1ba78ec7a9bc49d60f225531f3617"
+        self.api_secret = "bed00ba3e48de573ab7841e11971c32948edff6f"
+
+    
+    def send_text(self, them_num, us_message):
+        headers = {
+            'Accept': 'application/json',
+            'Authorization': f'{self.api_key}:{self.api_secret}',
+        }
+        data = {
+            'from': "+16084205020",
+            'to': them_num,
+            'body': us_message
+        }
+        url = 'https://api.justcall.io/v1/texts/new'
+
+        response = requests.post(url, headers=headers, json=data)
+        response_data = response.json()
+
+        return {"status": response_data.get("status", "unknown")}
+    
+
