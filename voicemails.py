@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 from supabase_client import SupabaseClient
 import os
 import re
+import json
 
 #improovy justcall info
 improovy_api_key = "a475b0ecf1d1ba78ec7a9bc49d60f225531f3617"
@@ -126,7 +127,7 @@ def add_voicemails():
             print(contactid)
             deals = crm.deals_from_personID(contactid)
             dealids = []
-            
+
             if deals:
 
                 for deal in deals.get('data', []):
@@ -187,6 +188,7 @@ def add_voicemails():
 
             #store project description in custom data
             custom_data = db_contact.get('custom_data')
+            custom_data = json.loads(custom_data)
             custom_data['project_description'] = project_description
             custom_data['voicemail'] = transcript['text']
             db.update_contact(id, {'custom_data': custom_data})
