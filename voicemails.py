@@ -126,10 +126,13 @@ def add_voicemails():
             print(contactid)
             deals = crm.deals_from_personID(contactid)
             dealids = []
-            for deal in deals.get('data', []):
-                dealids.append(deal['id'])
-            add_note = crm.add_note(content = 'VOICEMAIL: ' + transcript['text'], personid = contactid)
-            print('added note' + str(add_note))
+            
+            if deals:
+
+                for deal in deals.get('data', []):
+                    dealids.append(deal['id'])
+                add_note = crm.add_note(content = 'VOICEMAIL: ' + transcript['text'], personid = contactid)
+                print('added note' + str(add_note))
 
         for dealid in dealids:
             print('dealid')
