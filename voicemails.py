@@ -200,7 +200,7 @@ def add_voicemails():
 
             #send initial message using bot
             print('sending initial message')
-            jc = JustCallClient
+            jc = JustCallClient()
             jc.send_text(contact_number, initial_message)
             jc.send_text("+17372740771", initial_message + ' to ' + contact_number)
 
