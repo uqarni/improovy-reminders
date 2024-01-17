@@ -165,8 +165,9 @@ def add_voicemails():
                 db_contact = db.fetch_by_contact_phone_and_orgid('contacts', contact_number, 'improovy')
 
             if db_contact.get('group','N/A') == 'voicemail':
-                print('already sent a voicemail to this person')
+                print('already sent a voicemail text to this person')
                 return 200
+            
             else:
                 id = db_contact.get('id')
                 db.update('contacts', {'group': 'voicemail'}, id)
