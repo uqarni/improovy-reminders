@@ -8,7 +8,6 @@ from datetime import datetime, timedelta
 import requests
 import json
 import openai
-from justcall import send_text, assign_to_group
 import time
 import logging
 import platform
