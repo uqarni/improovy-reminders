@@ -191,13 +191,14 @@ def add_voicemails():
             custom_data = json.loads(custom_data)
             custom_data['project_description'] = project_description
             custom_data['voicemail'] = transcript['text']
-            db.update_contact(id, {'custom_data': json.dumps(custom_data)})
+            db.update('contacts', {'custom_data': json.dumps(custom_data)}, id)
 
             #send initial message using bot
+            print('sending initial message')
             jc = JustCallClient
             jc.send_text(contact_number, initial_message)
             jc.send_text("+17372740771", initial_message + ' to ' + contact_number)
-            
+
         except Exception as e:
             print('error: ', e)
             return 200
