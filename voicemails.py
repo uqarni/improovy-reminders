@@ -146,6 +146,10 @@ def add_voicemails():
             print('added note ' + str(add_note))
 
         try:
+            #we dont send the voicemail if there is a deal associated with the contact
+            if len(dealids) > 0:
+                print('dealids found, not sending voicemail')
+                continue
             #VOICEMAIL RESPONDER STARTS HERE
             #check to see if weve already sent a voicemail to this person
             contact_number = '+' + voicemail['contact_number']
