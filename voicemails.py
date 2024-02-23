@@ -145,72 +145,72 @@ def add_voicemails():
             add_note = crm.add_note(content = 'VOICEMAIL: ' + transcript['text'], dealid = dealid)
             print('added note ' + str(add_note))
 
-        try:
-            #we dont send the voicemail if there is a deal associated with the contact
-            if len(dealids) > 0:
-                print('dealids found, not sending voicemail')
-                continue
-            #VOICEMAIL RESPONDER STARTS HERE
-            #check to see if weve already sent a voicemail to this person
-            contact_number = '+' + voicemail['contact_number']
-            print('contact_number: ', contact_number)
+        # try:
+        #     #we dont send the voicemail if there is a deal associated with the contact
+        #     if len(dealids) > 0:
+        #         print('dealids found, not sending voicemail')
+        #         continue
+        #     #VOICEMAIL RESPONDER STARTS HERE
+        #     #check to see if weve already sent a voicemail to this person
+        #     contact_number = '+' + voicemail['contact_number']
+        #     print('contact_number: ', contact_number)
             
-            db = SupabaseClient()
+        #     db = SupabaseClient()
 
-            db_contact = db.fetch_by_contact_phone_and_orgid('contacts', contact_number, 'improovy')
-            print('db_contact: ', db_contact)
+        #     db_contact = db.fetch_by_contact_phone_and_orgid('contacts', contact_number, 'improovy')
+        #     print('db_contact: ', db_contact)
 
-            if db_contact == None:
-                #create contact in supabase
-                print('creating contact in supabase')
-                new_contact = {
-                    'org_id': 'improovy',
-                    'last_contact': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    'contact_phone': contact_number,
-                    'custom_data': '{}'
-                }
-                db.insert('contacts', new_contact)
-                db_contact = db.fetch_by_contact_phone_and_orgid('contacts', contact_number, 'improovy')
+        #     if db_contact == None:
+        #         #create contact in supabase
+        #         print('creating contact in supabase')
+        #         new_contact = {
+        #             'org_id': 'improovy',
+        #             'last_contact': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        #             'contact_phone': contact_number,
+        #             'custom_data': '{}'
+        #         }
+        #         db.insert('contacts', new_contact)
+        #         db_contact = db.fetch_by_contact_phone_and_orgid('contacts', contact_number, 'improovy')
 
-            if db_contact.get('group','N/A') == 'voicemail':
-                print('already sent a voicemail text to this person')
-                return 200
+        #     if db_contact.get('group','N/A') == 'voicemail':
+        #         print('already sent a voicemail text to this person')
+        #         return 200
             
-            else:
-                id = db_contact.get('id')
-                db.update('contacts', {'group': 'voicemail'}, id)
-                print('updated contact group to voicemail')
+        #     else:
+        #         id = db_contact.get('id')
+        #         db.update('contacts', {'group': 'voicemail'}, id)
+        #         print('updated contact group to voicemail')
                 
-            summarizer_prompt = db.get_system_prompt_prod("bots", "mike_voicemail_summarizer")
+        #     summarizer_prompt = db.get_system_prompt_prod("bots", "mike_voicemail_summarizer")
 
-            summarizer_prompt = summarizer_prompt.format(voicemail = transcript['text'], name="Mike")
-            summarizer_prompt = [{"role": "system", "content": summarizer_prompt}]
+        #     summarizer_prompt = summarizer_prompt.format(voicemail = transcript['text'], name="Mike")
+        #     summarizer_prompt = [{"role": "system", "content": summarizer_prompt}]
 
-            ## generate summary
-            initial_message, prompt_tokens, completion_tokens = generate_response(summarizer_prompt)
-            print('initial message: ', initial_message, ' to contact: ', contact_number)
+        #     ## generate summary
+        #     initial_message, prompt_tokens, completion_tokens = generate_response(summarizer_prompt)
+        #     print('initial message: ', initial_message, ' to contact: ', contact_number)
 
-            #parse initial message for snippet
-            project_description_pattern = r"voicemail about (.+?)\. Can"
-            initial_text_list = [initial_message]
-            project_description = [re.search(project_description_pattern, initial_message).group(1) for i in initial_text_list]
+        #     #parse initial message for snippet
+        #     project_description_pattern = r"voicemail about (.+?)\. Can"
+        #     initial_text_list = [initial_message]
+        #     project_description = [re.search(project_description_pattern, initial_message).group(1) for i in initial_text_list]
 
-            #store project description in custom data
-            custom_data = db_contact.get('custom_data')
-            custom_data = json.loads(custom_data)
-            custom_data['project_description'] = project_description
-            custom_data['voicemail'] = transcript['text']
-            db.update('contacts', {'custom_data': json.dumps(custom_data)}, id)
+        #     #store project description in custom data
+        #     custom_data = db_contact.get('custom_data')
+        #     custom_data = json.loads(custom_data)
+        #     custom_data['project_description'] = project_description
+        #     custom_data['voicemail'] = transcript['text']
+        #     db.update('contacts', {'custom_data': json.dumps(custom_data)}, id)
 
-            #send initial message using bot
-            print('sending initial message')
-            jc = JustCallClient()
-            jc.send_text(contact_number, initial_message)
-            jc.send_text("+17372740771", initial_message + ' to ' + contact_number)
+        #     #send initial message using bot
+        #     print('sending initial message')
+        #     jc = JustCallClient()
+        #     jc.send_text(contact_number, initial_message)
+        #     jc.send_text("+17372740771", initial_message + ' to ' + contact_number)
 
-        except Exception as e:
-            print('error: ', e)
-            return 200
+        # except Exception as e:
+        #     print('error: ', e)
+        #     return 200
 
         
 
