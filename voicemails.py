@@ -129,8 +129,10 @@ def add_voicemails():
             dealids = []
 
             try:
-
-                for deal in deals.get('data', []):
+                deals_data = deals.get('data', [])
+                if len(deals_data) == 0:
+                    continue
+                for deal in deals_data:
                     dealids.append(deal['id'])
                 add_note = crm.add_note(content = 'VOICEMAIL: ' + transcript['text'], personid = contactid)
                 print('added note' + str(add_note))
@@ -139,6 +141,9 @@ def add_voicemails():
                 print('error: ', e)
                 dealids = []
 
+        if len(dealids) == 0:
+            continue
+        
         for dealid in dealids:
             print('dealid')
             print(dealid)
